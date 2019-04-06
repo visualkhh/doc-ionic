@@ -1,0 +1,46 @@
+<ion-header no-border>
+  <div class="measHeader">
+    <ion-toolbar color="translucent" no-shadow>
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="home" color="light"></ion-back-button>
+      </ion-buttons>
+      <ion-title color="light">{{title}}</ion-title>
+    </ion-toolbar>
+
+    <div class="ion-text-center" style="margin-top:15px;">
+      <div><ion-text color="light" [innerHTML]=desc></ion-text></div>
+    </div>
+  </div>
+</ion-header>
+
+<ion-content padding>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" class="ion-text-right">
+        <ion-text color="personalPrimary"><ion-icon name="wifi"></ion-icon></ion-text>
+        {{'LABEL_GUIDE_NORMAL_RANGE' | translate}}
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12" class="ion-text-right">
+        <div #graphContainer style="width: 100%; height: 100%; display: grid" >
+          <graphk-gaugeStep *ngIf="canvasContainerElementRef && canvasContainerElementRef.nativeElement && datas && datas.length > 0"
+                            [width]="this.canvasContainerElementRef.nativeElement.clientWidth"
+                            [height]="this.canvasContainerElementRef.nativeElement.clientWidth/2"
+                            [data]="datas"
+                            style="border: 0px solid #000; margin: auto;">
+
+          </graphk-gaugeStep>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!--<div>sss{{code}}</div>-->
+  <div class="ion-text-left" style="margin-top: 10px;" *ngFor="let at of advice">
+    <ion-text color="medium" style="font-size: 15px">
+      <ion-icon name="alert" color="personalPrimary"></ion-icon> {{at}}
+    </ion-text>
+  </div>
+
+</ion-content>

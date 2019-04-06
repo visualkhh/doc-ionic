@@ -1,0 +1,75 @@
+<ion-header no-border>
+  <div *ngIf="album" [ngClass]="album.album_sub_art">
+    <ion-toolbar color="translucent" no-shadow>
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="home" color="light"></ion-back-button>
+      </ion-buttons>
+      <ion-title color="light" *ngIf="album">{{album.c_title|translate}}</ion-title>
+    </ion-toolbar>
+    <ion-text style="position: absolute; bottom: 10px;" color="light" margin *ngIf="album">{{album.c_sub_title|translate}}</ion-text>
+  </div>
+</ion-header>
+<ion-content padding>
+  <!--<ion-text color = "light">{{'LAST_DATE' | translate}} : {{''| moment}}</ion-text>-->
+  <ion-list lines="none" *ngIf="album">
+
+    <ion-item *ngFor="let content of album.contents" class="ion-margin-bottom">
+
+      <ion-avatar slot="start" style="width: 13vw; height: 13vw;">
+        <img src="/assets/images/{{content.c_id.toLowerCase()}}.png">
+      </ion-avatar>
+      <ion-label>
+        <h3>{{content.c_id + '_c_title' | translate}}</h3>
+        <p>{{content.c_time}}</p>
+      </ion-label>
+
+      <ion-icon *ngIf="!content.file" name="download" slot="end" color="personalPrimary" (click)="downloadConfirm(content)"></ion-icon>
+      <ion-icon *ngIf="content.file" name="play-circle" slot="end" color="medium" (click)="downloadAndPlay(content)"></ion-icon>
+
+    </ion-item>
+
+
+    <!--<ion-item *ngFor="let content of contens" class="ion-margin-bottom">-->
+      <!--<ion-label>-->
+        <!--{{content.c_title}}-->
+        <!--{{content.c_id + '_c_title' | translate}}-->
+      <!--</ion-label>-->
+      <!--<div>-->
+        <!--<ion-button (click)="play(content)">asd</ion-button>-->
+        <!--<ion-button (click)="downloadToPlay(content)">native</ion-button>-->
+        <!--<audio controls>-->
+          <!--<source [src]="content.c_url" type="audio/mpeg">-->
+          <!--Your browser does not support the audio element.-->
+        <!--</audio>-->
+      <!--</div>-->
+    <!--</ion-item>-->
+  </ion-list>
+
+  <!--<ion-button (click)="go()">aaaaaa</ion-button>-->
+  <!--<ion-input [(ngModel)]="lasturl"></ion-input>-->
+  <!--<ion-button (click)="ga()">ga</ion-button>-->
+
+  <!--<ion-button (click)="igo()">iii</ion-button>-->
+  <!--<ion-input [(ngModel)]="ilasturl"></ion-input>-->
+
+  <!--<img [src]="ilasturl"/>-->
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar class="ion-text-center">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12">
+          <audio  controls #player style="width: 100%; margin: 5px;">
+            <!--<source #playerSource [src]="" type="audio/mpeg">-->
+            Your browser does not support the audio element.
+          </audio>
+        </ion-col>
+        <ion-col size="12">
+          <ion-text color="medium">{{(playerTitle?playerTitle+'_c_title':'selectedContent')|translate}}</ion-text>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+  </ion-toolbar>
+</ion-footer>

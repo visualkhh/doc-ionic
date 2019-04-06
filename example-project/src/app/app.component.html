@@ -1,0 +1,76 @@
+<ion-app>
+  <div *ngIf="showSplash" class="splash">
+    <div class="spinner"></div>
+  </div>
+
+  <!--<ion-slides [@introState]="introState" *ngIf="intro" class="intro" pager="false" [options]="slideOpts" (ionSlideDidChange)="slideChanged()">-->
+  <ion-slides *ngIf="intro" class="intro" pager="false" [options]="slideOpts" (ionSlideDidChange)="slideChanged()">
+    <ion-slide style="background-color: #FFFFFF">
+      <img *ngIf="lang" src="/assets/images/{{lang}}/ic_guide_01.png">
+    </ion-slide>
+    <ion-slide style="background-color: #FFFFFF">
+      <img *ngIf="lang" src="/assets/images/{{lang}}/ic_guide_02.png">
+    </ion-slide>
+    <ion-slide style="background-color: #FFFFFF">
+      <img *ngIf="lang" src="/assets/images/{{lang}}/ic_guide_03.png">
+    </ion-slide>
+
+  </ion-slides>
+
+  <!-- fab placed to the bottom start -->
+  <ion-fab vertical="top" horizontal="end" slot="fixed" *ngIf="intro">
+    <ion-fab-button color="dark" (click)="introClose()">
+      <ion-icon name="close"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-fab vertical="bottom" horizontal="center" slot="fixed" *ngIf="introLast" style="left:0px; margin-left: 0; width: 100%">
+    <ion-button  color="personalPrimary" expand="block" size="large" (click)="introClose()" >{{'START_BTN'|translate}}</ion-button>
+  </ion-fab>
+
+
+  <ion-split-pane>
+    <ion-menu>
+      <ion-header>
+        <!--<ion-toolbar>-->
+          <!--<ion-title style="height: 150px">-->
+          <!--</ion-title>-->
+        <!--</ion-toolbar>-->
+            <ion-img src="{{userDetail && userDetail.login ? (userDetail.gender=='F'?'/assets/images/ic_sidemenu_woman.png':'/assets/images/ic_sidemenu_man.png') : '/assets/images/ic_sidemenu_omnifit.png'}}"
+                     margin style="width: 100px; height: 100px; margin:auto; margin-top:16px"
+            ></ion-img>
+            <ion-text margin>
+              <div class="ion-text-center">{{userDetail ? userDetail.user_nm : 'none'}}</div>
+            </ion-text>
+      </ion-header>
+      <ion-content>
+        <ion-list>
+          <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
+            <ion-item [routerDirection]="'root'" [routerLink]="p.url?[p.url]:undefined" (click)="p.action?action(p.action):undefined" >
+              <ion-icon *ngIf="p.icon" slot="start" [name]="p.icon"></ion-icon>
+              <ion-label>
+                {{p.title | translate}}
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+          <ion-menu-toggle auto-hide="false">
+            <ion-item *ngIf = "!this.userDetail || !this.userDetail.login" [routerDirection]="'root'" [routerLink]="['/login']">
+              <ion-label>
+                {{'MENU_LOGIN' | translate}}
+              </ion-label>
+            </ion-item>
+            <ion-item *ngIf = "this.userDetail && this.userDetail.login" (click)="logOut()">
+              <ion-label>
+                {{'MENU_LOGOUT' | translate}}
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+    <ion-router-outlet main></ion-router-outlet>
+  </ion-split-pane>
+</ion-app>

@@ -1,0 +1,57 @@
+<ion-header no-border>
+    <div class="historyHeader">
+        <ion-toolbar color="translucent" no-shadow>
+            <ion-buttons slot="start">
+                <ion-back-button defaultHref="home" color="light"></ion-back-button>
+            </ion-buttons>
+            <ion-title color="light">{{'PERSONAL_HISTORY_TITLE'|translate}}</ion-title>
+        </ion-toolbar>
+        <!--<ion-text style="position: absolute; bottom: 10px;" color="light" margin *ngIf="album">{{album.c_sub_title|translate}}</ion-text>-->
+
+        <div style="margin: 10px;">
+            <ion-segment color="personalPrimary">
+                <ion-segment-button value="pulse" style="height: 50px;" (ionSelect)="historyTypeClicked($event)"
+                                    [checked]="measTypeChecked=='pulse'">
+                    <ion-label style="margin-top:13px;" color="light">{{'N_TITLE_01' | translate}}</ion-label>
+                </ion-segment-button>
+                <ion-segment-button value="neuro" style="height: 50px;" (ionSelect)="historyTypeClicked($event)"
+                                    [checked]="measTypeChecked=='neuro'">
+                    <ion-label style="margin-top:13px;" color="light">{{'N_TITLE_02' | translate}}</ion-label>
+                    <!--<ion-icon name="bookmark"></ion-icon>-->
+                </ion-segment-button>
+            </ion-segment>
+        </div>
+        <div class="ion-text-center" style="margin-top:15px;" *ngIf="measTypeChecked=='pulse'">
+            <ion-text color="light" style="margin-right: 10px;">{{'HRV_HISTORY_TEXT_01'|translate}}</ion-text>
+            <ion-text color="personalPrimary" style="font-size: 50px;">{{measPulseAnsAgeAvg()}}</ion-text>
+            <ion-text color="light">{{'HRV_HISTORY_TEXT_02'|translate}}</ion-text>
+        </div>
+        <div class="ion-text-center" style="margin-top:15px;" *ngIf="measTypeChecked=='neuro'">
+            <ion-text color="light" style="margin-right: 10px;">{{'EEG_HISTORY_TEXT_01'|translate}}</ion-text>
+            <ion-text color="personalPrimary" style="font-size: 50px;">{{measNeuroTotAvg()}}</ion-text>
+            <ion-text color="light">{{'EEG_HISTORY_TEXT_02'|translate}}</ion-text>
+        </div>
+    </div>
+</ion-header>
+
+<ion-content padding>
+    <ion-list *ngIf="measTypeChecked=='pulse' && userMeasPulses && userMeasPulses.length">
+        <ion-item *ngFor="let at of userMeasPulses; index as i" [routerLink]="['/meas-pulse', at.reg_dt]">
+            <ion-text style="margin-right: 10px;">{{'HRV_HISTORY_TEXT_01'|translate}}</ion-text>
+            <ion-text color="personalPrimary">{{at.ans_age}}</ion-text>
+            <ion-text>{{'HRV_HISTORY_TEXT_02'|translate}}</ion-text>
+            <ion-text slot="end">{{at.regDt|moment: 'YYYY.MM.DD'}}</ion-text>
+            <!--<ion-icon name="arrow-dropright" slot="end"></ion-icon>-->
+        </ion-item>
+    </ion-list>
+    <ion-list *ngIf="measTypeChecked=='neuro' && userMeasNeuros">
+        <ion-item *ngFor="let at of userMeasNeuros; index as i" [routerLink]="['/meas-neuro', at.reg_dt]">
+            <ion-text style="margin-right: 10px;">{{'EEG_HISTORY_TEXT_01'|translate}}</ion-text>
+            <ion-text color="personalPrimary">{{at.tot}}</ion-text>
+            <ion-text>{{'EEG_HISTORY_TEXT_02'|translate}}</ion-text>
+            <ion-text slot="end">{{at.regDt|moment: 'YYYY.MM.DD'}}</ion-text>
+            <!--<ion-icon name="arrow-dropright" slot="end"></ion-icon>-->
+        </ion-item>
+    </ion-list>
+
+</ion-content>

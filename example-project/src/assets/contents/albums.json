@@ -1,0 +1,136 @@
+[
+  {
+    "c_title": "album_training_01",
+    "c_sub_title": "CATEGORY_DESC_001_001",
+    "album_art": "img_main_training_01",
+    "album_sub_art": "img_sub_top_01",
+    "contents": [
+      "CSR082",
+      "CSR034",
+      "CSC031",
+      "CSR057",
+      "CSP804"
+
+    ]
+  },
+  {
+    "c_title": "album_training_02",
+    "c_sub_title": "CATEGORY_DESC_002_001",
+    "album_art": "img_main_training_02",
+    "album_sub_art": "img_sub_top_02",
+    "contents": [
+      "CSR079",
+      "CSR034",
+      "CSR057",
+      "CSC029",
+      "CSR082"
+    ]
+  },
+  {
+    "c_title": "album_training_03",
+    "c_sub_title": "CATEGORY_DESC_003_001",
+    "album_art": "img_main_training_03",
+    "album_sub_art": "img_sub_top_03",
+    "contents": [
+      "CSR055",
+      "CSR080",
+      "CSC016",
+      "CSC021",
+      "CSC007",
+      "CSC029",
+      "CSS027",
+      "CSC031",
+      "CSR082",
+      "CSR805"
+    ]
+  },
+  {
+    "c_title": "album_training_04",
+    "c_sub_title": "CATEGORY_DESC_004_001",
+    "album_art": "img_main_training_04",
+    "album_sub_art": "img_sub_top_04",
+    "contents": [
+      "CSP804",
+      "CSR079",
+      "CSR055",
+      "CSR034",
+      "CSR805"
+    ]
+  },
+  {
+    "c_title": "album_training_05",
+    "c_sub_title": "CATEGORY_DESC_005_001",
+    "album_art": "img_main_training_05",
+    "album_sub_art": "img_sub_top_05",
+    "contents": [
+      "CSC015",
+      "CSC007",
+      "CSC018",
+      "CSC030",
+      "CSC021"
+    ]
+  },
+  {
+    "c_title": "album_training_06",
+    "c_sub_title": "CATEGORY_DESC_006_001",
+    "album_art": "img_main_training_06",
+    "album_sub_art": "img_sub_top_06",
+    "contents": [
+      "CSC030",
+      "CSC031",
+      "CSR080",
+      "CSR029",
+      "CSR055",
+      "CSR055",
+      "CSC029",
+      "CSC007",
+      "CSC031",
+      "CSC007"
+    ]
+  },
+  {
+    "c_title": "album_training_07",
+    "c_sub_title": "CATEGORY_DESC_007_001",
+    "album_art": "img_main_training_07",
+    "album_sub_art": "img_sub_top_07",
+    "contents": [
+      "CSC018",
+      "CSC021",
+      "CSC016",
+      "CSC015",
+      "CSC007",
+      "CSS027",
+      "CSR029",
+      "CSC031",
+      "CSC029",
+      "CSR805"
+    ]
+  },
+  {
+    "c_title": "album_training_08",
+    "c_sub_title": "CATEGORY_DESC_008_001",
+    "album_art": "img_main_training_08",
+    "album_sub_art": "img_sub_top_08",
+    "contents": [
+      "CSR080",
+      "CSR082",
+      "CSS027",
+      "CSR029",
+      "CSR805"
+    ]
+  },
+  {
+    "c_title": "album_training_09",
+    "c_sub_title": "CATEGORY_DESC_009_001",
+    "album_art": "img_main_training_09",
+    "album_sub_art": "img_sub_top_09",
+    "contents": [
+      "CSS032",
+      "CSS009",
+      "CSS024",
+      "CSS013",
+      "CSS008",
+      "CSS802"
+    ]
+  }
+]

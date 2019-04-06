@@ -1,0 +1,61 @@
+<ion-header no-border>
+  <div class="pageHeader">
+    <ion-toolbar color="translucent" no-shadow>
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="home" color="light"></ion-back-button>
+      </ion-buttons>
+      <ion-title color="light">{{'CONTENTS_TITLE_16'|translate}}</ion-title>
+    </ion-toolbar>
+
+    <div>
+      <ion-text style="font-size: 25px;" color="light" margin>{{headTitle|translate}}</ion-text>
+    </div>
+    <!--<ion-item>-->
+      <!--<ion-badge slot="start">11</ion-badge>-->
+      <!--<ion-label>{{'N_TITLE_01' | translate}}</ion-label>-->
+      <!--<ion-badge slot="end">22</ion-badge>-->
+    <!--</ion-item>-->
+
+    <div *ngIf="recommendPulses && recommendPulses.length > 0">
+      <!--<ion-text color="light">{{'N_TITLE_01' | translate}}:</ion-text> -->
+      <ion-badge style="margin:5px;" *ngFor="let it of recommendPulses" color="primary">{{'MEASUREMENT_DETAIL_TITLE_'+it.parent|translate}}: {{it.code|translate}} </ion-badge>
+    </div>
+    <div *ngIf="recommendNeuros && recommendNeuros.length > 0">
+      <!--<ion-text color="light">{{'N_TITLE_02' | translate}}:</ion-text> -->
+      <ion-badge style="margin:5px;" *ngFor="let it of recommendNeuros" color="primary">{{'MEASUREMENT_DETAIL_TITLE_'+it.parent|translate}}: {{it.code|translate}} </ion-badge>
+    </div>
+  </div>
+</ion-header>
+<ion-content padding>
+  <ion-list lines="none">
+    <ion-item *ngFor="let content of contents" class="ion-margin-bottom">
+      <ion-avatar slot="start" style="width: 13vw; height: 13vw;">
+        <img src="/assets/images/{{content.c_id.toLowerCase()}}.png">
+      </ion-avatar>
+      <ion-label>
+        <h3>{{content.c_id + '_c_title' | translate}}</h3>
+        <p>{{content.c_time}}</p>
+      </ion-label>
+      <ion-icon *ngIf="!content.file" name="download" slot="end" color="personalPrimary" (click)="downloadConfirm(content)"></ion-icon>
+      <ion-icon *ngIf="content.file" name="play-circle" slot="end" color="medium" (click)="downloadAndPlay(content)"></ion-icon>
+    </ion-item>
+  </ion-list>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar class="ion-text-center">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12">
+          <audio  controls #player style="width: 100%; margin: 5px;">
+            Your browser does not support the audio element.
+          </audio>
+        </ion-col>
+        <ion-col size="12">
+          <ion-text color="medium">{{(playerTitle?playerTitle+'_c_title':'selectedContent')|translate}}</ion-text>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+  </ion-toolbar>
+</ion-footer>

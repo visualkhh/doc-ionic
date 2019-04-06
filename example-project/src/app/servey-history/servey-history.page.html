@@ -1,0 +1,59 @@
+<ion-header no-border>
+  <div class="serveyHeader">
+    <ion-toolbar color="translucent" no-shadow>
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="home" color="light" [routerLink]="['/home']"></ion-back-button>
+      </ion-buttons>
+      <ion-title color="light">{{'CONTENTS_TITLE_20'|translate}}</ion-title>
+    </ion-toolbar>
+    <!--<ion-text style="position: absolute; bottom: 10px;" color="light" margin *ngIf="album">{{album.c_sub_title|translate}}</ion-text>-->
+
+    <div class="ion-text-center" style="margin-top:15px;">
+      <ion-text color="light" style="margin-right: 10px;">{{'LAST_DATE'|translate}}: {{surveys&&surveys.length>0?(surveys[surveys.length-1].regDt|moment):'-'}}</ion-text>
+    </div>
+    <div class="ion-text-center" style="margin-top:15px;">
+      <div *ngIf="surveys&&surveys.length>0" [routerLink]="['/servey-result', surveys[surveys.length-1].algorithm().result_code]">
+        <div>
+          <ion-text color="light">
+          {{surveys[surveys.length-1].r_title}}
+          </ion-text>
+        </div>
+        <div>
+          <ion-text color="danger" style="font-size: 35px; font-weight: bold;">
+          {{surveys[surveys.length-1].algorithm().result_type}}
+          </ion-text>
+          <ion-text color="light">
+          ({{surveys[surveys.length-1].algorithm().score}} {{'EEG_HISTORY_TEXT_02'|translate}})
+          </ion-text>
+        </div>
+      </div>
+
+      <div *ngIf="!surveys||surveys.length<=0">
+      <ion-text color="light" style="margin-right: 10px;">{{'summary_txt_04'|translate}}</ion-text>
+      </div>
+    </div>
+    <!--<div class="ion-text-center" style="margin-top:15px;" *ngIf="measTypeChecked=='neuro'">-->
+      <!--<ion-text color="light" style="margin-right: 10px;">{{'EEG_HISTORY_TEXT_01'|translate}}</ion-text>-->
+      <!--<ion-text color="personalPrimary" style="font-size: 50px;">{{measNeuroTotAvg()}}</ion-text>-->
+      <!--<ion-text color="light">{{'EEG_HISTORY_TEXT_02'|translate}}</ion-text>-->
+    <!--</div>-->
+
+  </div>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+
+
+    <ion-item-group *ngFor="let at of contentsService.surveys; index as i">
+      <ion-item-divider style="border-radius: 35px; border: 1px solid #4495b6; margin-bottom: 5px;" [routerLink]="['/servey-detail', at.r_code]">
+        <ion-label style="margin-right: 10px;" size="large" color="dark">{{at.r_title}}</ion-label>
+        <ion-icon name="arrow-dropright-circle" slot="end"></ion-icon>
+      </ion-item-divider>
+      <ion-item lines="none" *ngFor="let at of getServeys(at.r_code); index as i" [routerLink]="['/servey-result', at.algorithm().result_code]">
+        <ion-label color="medium" style="font-size: 15px; margin:2px;" ><ion-text  style="margin-left: 10px;" color="danger">{{at.algorithm().result_type}}</ion-text> <ion-text style="margin-left: 10px;">{{at.regDt|moment}}</ion-text></ion-label>
+        <!--<ion-icon name="arrow-forward" slot="end"></ion-icon>-->
+      </ion-item>
+    </ion-item-group>
+  </ion-list>
+</ion-content>

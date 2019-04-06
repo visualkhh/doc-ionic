@@ -1,0 +1,11 @@
+{
+  "config_ios" : {
+    "NSCameraUsageDescription": "Take pictures",
+    "CFBundleDisplayName": "마인드케어 개인",
+    "CFBundleName": "Personal"
+  },
+  "config_android" : {
+    "app_name": "마인드케어 개인"
+  }
+}
+

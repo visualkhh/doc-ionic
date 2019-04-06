@@ -1,0 +1,6 @@
+{
+  "appId": "io.ionic.starter",
+  "appName": "personal-mindcare-webapp",
+  "bundledWebRuntime": false,
+  "webDir": "www"
+}

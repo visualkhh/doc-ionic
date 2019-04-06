@@ -1,0 +1,78 @@
+<ion-header no-border>
+  <div class="measHeader">
+    <ion-toolbar color="translucent" no-shadow>
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="home" color="light"></ion-back-button>
+      </ion-buttons>
+      <ion-title color="light">{{'N_TITLE_01'|translate}}</ion-title>
+      <ion-text color="light" slot="end" *ngIf="meas">{{meas.regDt|moment}}</ion-text>
+    </ion-toolbar>
+
+    <div class="ion-text-center" style="margin-top:15px;">
+      <div><ion-text color="light">{{'AA000_TITLE'|translate}}</ion-text></div>
+      <div *ngIf="meas"><ion-text color="personalPrimary" style="font-size: 50px;">{{meas.tot}}</ion-text><ion-text color="light">{{'EEG_HISTORY_TEXT_02'|translate}}</ion-text></div>
+    </div>
+  </div>
+</ion-header>
+
+<ion-content padding>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="4" class="ion-text-center"></ion-col>
+      <ion-col size="4" class="ion-text-center">
+        <div *ngIf="meas" [routerLink]="['/meas-result', meas.concentration_cd]">
+          <div><img src="/assets/images/ic_health_06.png" style="width: 30px;"></div>
+          <div><ion-text>{{'CAUTION_006'|translate}}</ion-text></div>
+          <div><ion-text [ngStyle]="{'color':concentrationTypeMeta.getMetaDataByCode(meas.concentration_cd).color}" >{{meas.concentration_cd|translate}}</ion-text><ion-icon color="medium" name="add-circle"></ion-icon></div>
+        </div>
+      </ion-col>
+      <ion-col size="4" class="ion-text-center"></ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size="2" class="ion-text-center" style="display: grid">
+        <div style="margin: auto;" *ngIf="meas" [routerLink]="['/meas-result', meas.balance_cd]">
+          <div><img src="/assets/images/ic_health_07.png" style="width: 30px;"></div>
+          <div><ion-text>{{'CAUTION_007'|translate}}</ion-text></div>
+          <div><ion-text [ngStyle]="{'color':neuroBalanceTypeMeta.getMetaDataByCode(meas.balance_cd).color}" >{{meas.balance_cd|translate}}</ion-text><ion-icon color="medium" name="add-circle"></ion-icon></div>
+        </div>
+      </ion-col>
+      <ion-col size="8" class="ion-text-center">
+        <div #graphContainer style="width: 100%; height: 100%; display: grid" >
+          <graphk-polygon *ngIf="canvasContainerElementRef && canvasContainerElementRef.nativeElement"
+                          [width]="this.canvasContainerElementRef.nativeElement.clientWidth"
+                          [height]="this.canvasContainerElementRef.nativeElement.clientWidth"
+                          [polygonLength]="5"
+                          [data]="getMeasGraph()"
+                          style="border: 0px solid #000; margin: auto;"
+          ></graphk-polygon>
+        </div>
+      </ion-col>
+      <ion-col size="2" class="ion-text-center" style="display: grid">
+        <div style="margin: auto;" *ngIf="meas" [routerLink]="['/meas-result', meas.mental_cd]">
+          <div><img src="/assets/images/ic_health_08.png" style="width: 30px;"></div>
+          <div><ion-text>{{'CAUTION_008'|translate}}</ion-text></div>
+          <div><ion-text [ngStyle]="{'color':mentalTypeMeta.getMetaDataByCode(meas.mental_cd).color}" >{{meas.mental_cd|translate}}</ion-text><ion-icon color="medium" name="add-circle"></ion-icon></div>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size="4" class="ion-text-center"></ion-col>
+      <ion-col size="4" class="ion-text-center">
+        <div *ngIf="meas" [routerLink]="['/meas-result', meas.stress_cd]">
+          <div><img src="/assets/images/ic_health_03.png" style="width: 30px;"></div>
+          <div><ion-text>{{'CAUTION_009'|translate}}</ion-text></div>
+          <div><ion-text [ngStyle]="{'color':brainstressTypeMeta.getMetaDataByCode(meas.stress_cd).color}" >{{meas.stress_cd|translate}}</ion-text><ion-icon color="medium" name="add-circle"></ion-icon></div>
+        </div>
+      </ion-col>
+      <ion-col size="4" class="ion-text-center"></ion-col>
+    </ion-row>
+
+
+  </ion-grid>
+  <div class="ion-text-center" style="margin-top: 10px;">
+    <ion-text color="medium" style="font-size: 15px" > <ion-icon name="alert" color="personalPrimary"></ion-icon> {{'GRAPH_GUIDE_MENT'|translate}}</ion-text>
+  </div>
+
+</ion-content>

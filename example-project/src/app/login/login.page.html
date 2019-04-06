@@ -1,0 +1,64 @@
+<ion-header no-border>
+    <ion-toolbar color="translucent" no-shadow color="medium">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="home" color="light"></ion-back-button>
+        </ion-buttons>
+        <ion-title color="light">{{'MENU_LOGIN'|translate}}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content padding color="translucent" class="loginContent">
+    <form [formGroup]="formGroup" (ngSubmit)="submit(formGroup.value)">
+        <ion-text *ngIf="!userDetail || !userDetail.login" color="light">
+            <!--<div style="font-size: 2rem; margin-top: 2rem; margin-bottom: 2rem;">{{'LOGIN_TEXT_01' | translate}}</div>-->
+            <p style="font-size: 5vh;">{{'LOGIN_TEXT_01' | translate}}</p>
+        </ion-text>
+
+        <ion-list *ngIf="!userDetail || !userDetail.login" style="margin-bottom: 4rem;">
+            <!--<ion-list-header>-->
+            <!--<ion-label color="light">{{'LOGIN_TEXT_00'|translate}}</ion-label>-->
+            <!--</ion-list-header>-->
+            <ion-item>
+                <ion-icon name="card" color="light" slot="start"></ion-icon>
+                <ion-input type="tel" name="birthday" color="light" placeholder="{{'LOGIN_TEXT_02' | translate}}"
+                           formControlName="birthday" [(ngModel)]="userDetail.birthday"></ion-input>
+            </ion-item>
+            <ion-item lines="none"
+                      *ngIf="!formGroup.controls['birthday'].valid && formGroup.controls['birthday'].touched">
+                <ion-label color="danger" class="ion-text-center">
+                    {{'TOAST_TEXT_06' | translate}}
+                </ion-label>
+            </ion-item>
+
+            <ion-item>
+                <ion-icon name="call" color="light" slot="start"></ion-icon>
+                <ion-input type="tel" name="phone" color="light" placeholder="{{'LOGIN_TEXT_03' | translate}}"
+                           formControlName="phone" [(ngModel)]="userDetail.phone"></ion-input>
+            </ion-item>
+            <ion-item lines="none" *ngIf="!formGroup.controls['phone'].valid && formGroup.controls['phone'].touched">
+                <ion-label color="danger" class="ion-text-center">
+                    {{'TOAST_TEXT_07' | translate}}
+                </ion-label>
+            </ion-item>
+        </ion-list>
+
+        <ion-button margin type="submit" expand="block" color="personalPrimary" size="large" full
+                    *ngIf="!userDetail || !userDetail.login" [disabled]="!formGroup.valid">{{'BTN_OK' | translate}}
+        </ion-button>
+
+        <ion-item *ngIf="!userDetail || !userDetail.login" color="translucent" lines="none">
+            <ion-checkbox name="autoLogin" color="personalPrimary"
+                          formControlName="autoLogin" ([ngModel])="userDetail.autoLogin"></ion-checkbox>
+            <!--<input type="checkbox" color="personalPrimary"  ([ngModel]) = "userDetail.autoLogin"></input-checkbox>-->
+            <ion-input color="light">{{'LOGIN_TEXT_04' | translate}}</ion-input>
+        </ion-item>
+
+        <ion-button margin expand="block" color="danger" size="large" full (click)="logout()"
+                    *ngIf="userDetail && userDetail.login">{{'SETTING_TEXT_04' | translate}}
+        </ion-button>
+
+        <!--<ion-input type="password" placeholder="Password"></ion-input> <ion-icon name="ios-eye-outline" item-right></ion-icon>-->
+    </form>
+
+    <!--<ion-label color="light" style="font-size: 2rem;">{{'LOGIN_TEXT_01' | translate}}</ion-label>-->
+</ion-content>

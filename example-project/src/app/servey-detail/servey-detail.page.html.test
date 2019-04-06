@@ -1,0 +1,106 @@
+<ion-header no-border>
+  <ion-toolbar color="translucent" no-shadow color="medium">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="home" color="light"></ion-back-button>
+    </ion-buttons>
+    <ion-title><div *ngIf="data">{{data.r_title}}</div></ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+
+<ion-header no-border>
+  <ion-toolbar  no-shadow>
+    <div class="ion-text-center" style="margin-top: 20px;">
+      <ion-badge color="dark" style="padding:10px;">
+        <ion-icon style="margin-right: 5px;" name="document"></ion-icon>
+        <ion-text style="margin-right: 10px;">{{'survey_txt_04'|translate}}</ion-text>
+        <ion-text style="margin-right: 5px;" color="personalPrimary">{{position+1}}</ion-text>
+        <ion-text style="margin-right: 5px;">/</ion-text>
+        <ion-text style="margin-right: 5px;">{{data.r_questions.length}}</ion-text>
+      </ion-badge>
+    </div>
+
+
+
+    <div margin class="ion-text-center">
+      <ion-text style="font-size: 10vw;font-weight: bold;">{{data.r_questions[position].q_content}}</ion-text>
+    </div>
+    <div class="ion-text-center" style="margin-top: 10px; color: #000;">
+      <ion-text>{{data.r_guide}}</ion-text>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+
+
+<ion-content padding *ngIf="data">
+
+  <ion-list radio-group>
+  <ion-radio-group [(ngModel)]="unit">
+  <!--<ion-radio-group >-->
+    <ion-item margin lines="none" *ngFor="let at of data.r_questions[position].q_answers; index as i" color="translucent" style="
+    border-radius: 35px;
+    border: 1px solid #47a9cb;
+    /*background: #009900;*/
+    /*text-align:center;*/
+    ">
+      {{data.r_questions[position].selectedGrade}}
+      {{at.a_grade}}
+      <ion-radio value={{at.a_grade}}  margin (ionSelect)="data.r_questions[position].selectedGrade = at.a_grade"></ion-radio>
+      <ion-label margin>{{at.a_content}}</ion-label>
+    </ion-item>
+
+    <!--<ion-item margin lines="none" color="translucent" style="-->
+    <!--border-radius: 35px;-->
+    <!--border: 1px solid #47a9cb;-->
+    <!--/*background: #009900;*/-->
+    <!--/*text-align:center;*/-->
+    <!--">-->
+      <!--<ion-radio value=1  margin></ion-radio>-->
+      <!--<ion-label margin>1</ion-label>-->
+    <!--</ion-item>-->
+    <!--<ion-item margin lines="none" color="translucent" style="-->
+    <!--border-radius: 35px;-->
+    <!--border: 1px solid #47a9cb;-->
+    <!--/*background: #009900;*/-->
+    <!--/*text-align:center;*/-->
+    <!--">-->
+      <!--<ion-radio value=0  margin></ion-radio>-->
+      <!--<ion-label margin>0</ion-label>-->
+    <!--</ion-item>-->
+  </ion-radio-group>
+  </ion-list>
+  <!--<div style="position:absolute; bottom: 0">-->
+  <!--<ion-button color="primary">Primary</ion-button> <ion-button color="primary">Primary</ion-button>-->
+  <!--</div>-->
+  <!--<ion-fab vertical="bottom" horizontal="end">-->
+    <!--<ion-fab-button>Share</ion-fab-button>-->
+
+    <!--<ion-fab-list side="top">-->
+      <!--<ion-fab-button>Facebook</ion-fab-button>-->
+      <!--<ion-fab-button>Twitter</ion-fab-button>-->
+      <!--<ion-fab-button>Youtube</ion-fab-button>-->
+    <!--</ion-fab-list>-->
+
+    <!--<ion-fab-list side="start">-->
+      <!--<ion-fab-button>Vimeo</ion-fab-button>-->
+    <!--</ion-fab-list>-->
+
+  <!--</ion-fab>-->
+</ion-content>
+<ion-footer no-border>
+  <ion-toolbar class="ion-text-center" no-shadow>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6">
+            <ion-button expand="block" color="light" (click)="previous()">{{'survey_txt_01'|translate}}</ion-button>
+        </ion-col>
+        <ion-col size="6">
+            <ion-button expand="block"color="personalPrimary" (click)="next()">{{'survey_txt_02'|translate}}</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+  </ion-toolbar>
+</ion-footer>

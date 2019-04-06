@@ -1,0 +1,213 @@
+[
+  {
+    "code": "ES004",
+    "contents": [
+      "CSR082",
+      "CSR034",
+      "CSC031",
+      "CSR057",
+      "CSP804"
+    ]
+  },
+  {
+    "code": "ES005",
+    "contents": [
+      "CSR082",
+      "CSR034",
+      "CSC031",
+      "CSR057",
+      "CSP804"
+    ]
+  },
+  {
+    "code": "HH002",
+    "contents": [
+    "CSP804",
+    "CSR079",
+    "CSR055",
+    "CSR034",
+    "CSR805"
+    ]
+  },
+  {
+    "code": "HH001",
+    "contents": [
+      "CSP804",
+      "CSR079",
+      "CSR055",
+      "CSR034",
+      "CSR805"
+    ]
+  },
+  {
+    "code": "FT003",
+    "contents": [
+      "CSR079",
+      "CSR034",
+      "CSR057",
+      "CSC029",
+      "CSR082"
+    ]
+  },
+  {
+    "code": "FT004",
+    "contents": [
+      "CSR079",
+      "CSR034",
+      "CSR057",
+      "CSC029",
+      "CSR082"
+    ]
+  },
+  {
+    "code": "FT005",
+    "contents": [
+      "CSR079",
+      "CSR034",
+      "CSR057",
+      "CSC029",
+      "CSR082"
+    ]
+  },
+  {
+    "code": "BE001",
+    "contents": [
+      "CSR055",
+      "CSR080",
+      "CSC016",
+      "CSC021",
+      "CSC007"
+    ]
+  },
+  {
+    "code": "BE002",
+    "contents": [
+      "CSR055",
+      "CSR080",
+      "CSC016",
+      "CSC021",
+      "CSC007"
+    ]
+  },
+  {
+    "code": "BE006",
+    "contents": [
+      "CSC029",
+      "CSS027",
+      "CSC031",
+      "CSR082",
+      "CSR805"
+    ]
+  },
+  {
+    "code": "BE007",
+    "contents": [
+      "CSC029",
+      "CSS027",
+      "CSC031",
+      "CSR082",
+      "CSR805"
+    ]
+  },
+  {
+    "code": "AN002",
+    "contents": [
+      "CSP804",
+      "CSR079",
+      "CSR055",
+      "CSR034",
+      "CSR805"
+    ]
+  },
+  {
+    "code": "AN001",
+    "contents": [
+      "CSP804",
+      "CSR079",
+      "CSR055",
+      "CSR034",
+      "CSR805"
+    ]
+  },
+  {
+    "code": "CD001",
+    "contents": [
+      "CSC015",
+      "CSC007",
+      "CSC018",
+      "CSC030",
+      "CSC021"
+    ]
+  },
+  {
+    "code": "CD002",
+    "contents": [
+      "CSC015",
+      "CSC007",
+      "CSC018",
+      "CSC030",
+      "CSC021"
+    ]
+  },
+  {
+    "code": "TR005",
+    "contents": [
+      "CSR080",
+      "CSR082",
+      "CSS027",
+      "CSR029",
+      "CSR805"
+    ]
+  },
+  {
+    "code": "MC001",
+    "contents": [
+      "CSC018",
+      "CSC021",
+      "CSC016",
+      "CSC015",
+      "CSC007"
+    ]
+  },
+  {
+    "code": "MC002",
+    "contents": [
+      "CSC018",
+      "CSC021",
+      "CSC016",
+      "CSC015",
+      "CSC007"
+    ]
+  },
+  {
+    "code": "MC005",
+    "contents": [
+      "CSS027",
+      "CSR029",
+      "CSC031",
+      "CSC029",
+      "CSR805"
+    ]
+  },
+  {
+    "code": "BC001",
+    "contents": [
+      "CSC030",
+      "CSC031",
+      "CSR080",
+      "CSR029",
+      "CSR055"
+    ]
+  },
+  {
+    "code": "BC005",
+    "contents": [
+      "CSR055",
+      "CSC029",
+      "CSC007",
+      "CSC031",
+      "CSC007"
+    ]
+  }
+]
+

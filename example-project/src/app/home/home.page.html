@@ -1,0 +1,100 @@
+<!--<div style="width: 100%; height: 100%" class="homeContent">-->
+
+  <ion-header no-border>
+    <ion-toolbar color="translucent" no-shadow color="medium">
+      <ion-buttons slot="start">
+        <ion-menu-button color="light"></ion-menu-button>
+      </ion-buttons>
+      <ion-title color="light" slot="start">
+        {{'APP_NAME_PERSONAL' | translate }}
+      </ion-title>
+
+      <ion-icon *ngIf="userDetail && userDetail.login" color="light" [routerLink]="['/meas-history']" style="font-size: 25px; margin-left: 10px;" slot="end" name="clipboard"></ion-icon>
+
+      <!--<ion-button (click)="onClick()" slot="end" color="translucent">-->
+        <!--<ion-icon slot="icon-only" name="clipboard"></ion-icon>-->
+      <!--</ion-button>-->
+
+    </ion-toolbar>
+  </ion-header>
+
+
+  <ion-content color="translucent" class="homeContent">
+    <!--<ion-input placeholder="Enter Input" [(ngModel)]='data' ></ion-input>-->
+    <!--<ion-button color="primary" (click)="save()">save</ion-button>-->
+    <!--<ion-button color="primary" (click)="load()">load</ion-button>-->
+
+
+
+
+    <ion-list lines="none" style="padding-top: 10px;">
+      <!--<ion-list-header>-->
+        <!--<ion-label>Resources</ion-label>-->
+      <!--</ion-list-header>-->
+      <ion-item *ngIf="userDetail && userDetail.login">
+        <ion-grid >
+          <ion-row>
+            <ion-col class="ion-align-self-center ion-text-center">
+              <ion-text color = "light">{{'LAST_DATE' | translate}} : {{userMeasPulse ? (userMeasPulse.regDt| moment) : '-'}}</ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col [ngClass]="userMeasPulse ? 'measArc' : 'pulseEmpty'" style="display: grid;">
+              <div style="margin:auto" *ngIf="userMeasPulse" [routerLink]="['/meas-pulse', userMeasPulse.reg_dt]">
+                <p style="text-align: center; margin: 2px">
+                  <ion-text color="light" style="margin:auto; font-size: 4vw;">{{'HRV_HISTORY_TEXT_03' | translate}}</ion-text>
+                </p>
+                <p style="text-align: center; margin: 2px">
+                  <ion-text color="light" style="font-size: 8vw;">{{userMeasPulse.ans_age}}</ion-text>
+                  <ion-text color="light" style="font-size: 2vw;">{{'HRV_HISTORY_TEXT_02' | translate}}</ion-text>
+                </p>
+              </div>
+            </ion-col>
+            <ion-col [ngClass]="userMeasNeuro ? 'measArc' : 'neuroEmpty'" style="display: grid;">
+              <div style="margin:auto" *ngIf="userMeasNeuro" [routerLink]="['/meas-neuro', userMeasNeuro.reg_dt]">
+                <p style="text-align: center; margin: 2px">
+                  <ion-text color="light" style="margin:auto; font-size: 4vw;">{{'EEG_HISTORY_TEXT_03' | translate}}</ion-text>
+                </p>
+                <p style="text-align: center; margin: 2px">
+                  <ion-text color="light" style="font-size: 8vw;">{{userMeasNeuro.tot}}</ion-text>
+                  <ion-text color="light" style="font-size: 2vw;">{{'EEG_HISTORY_TEXT_02' | translate}}</ion-text>
+                </p>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item>
+      <ion-item *ngIf="this.trans.currentLang" class="ion-margin-bottom">
+        <ion-img src="/assets/images/{{this.trans.currentLang}}/img_main_banner.png" [routerLink]="userDetail.login&&userMeasPulse&&userMeasNeuro?['/recommend',userMeasPulse.reg_dt+'_'+userMeasNeuro.reg_dt]:['/login']"></ion-img>
+      </ion-item>
+      <ion-item *ngIf="this.trans.currentLang=='ko'" class="ion-margin-bottom">
+        <ion-img src="/assets/images/{{this.trans.currentLang}}/bg_main_hawayou.png" [routerLink]="userDetail.login?['/hawayou']:['/login']"></ion-img>
+      </ion-item>
+      <ion-item *ngIf="this.trans.currentLang=='ko'" class="ion-margin-bottom">
+        <ion-img  src="/assets/images/{{this.trans.currentLang}}/bg_self_psy.png" [routerLink]="['/servey-history']"></ion-img>
+      </ion-item>
+      <ion-item *ngIf="this.trans.currentLang" class="ion-margin-bottom" (click)="openBrower('https://care.omnifit.co.kr/front/counsel_area.jsp')">
+        <ion-img src="/assets/images/{{this.trans.currentLang}}/bg_near_counsel.png"></ion-img>
+      </ion-item>
+
+      <ion-list-header>
+        <ion-label color="light">{{'SUMMARY_TEXT_TITLE_00'|translate}}</ion-label>
+      </ion-list-header>
+
+      <ion-item>
+        <div class="scrolling-wrapper" *ngIf="albums">
+          <ion-card *ngFor="let album of albums" [routerLink]="['/album', album.c_title]">
+            <ion-img src="/assets/images/{{album.album_art}}.png"></ion-img>
+            <ion-card-header>
+              <ion-card-title>{{album.c_title | translate}}</ion-card-title>
+            </ion-card-header>
+          </ion-card>
+        </div>
+      </ion-item>
+
+    </ion-list>
+
+
+
+  </ion-content>
+<!--</div>-->

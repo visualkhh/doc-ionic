@@ -1,0 +1,66 @@
+<ion-header no-border style="background-color: #ffffff;">
+  <ion-toolbar color="translucent" no-shadow color="medium">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="home" color="light"></ion-back-button>
+    </ion-buttons>
+    <ion-title><div *ngIf="data">{{data.r_title}}</div></ion-title>
+  </ion-toolbar>
+
+    <div  no-shadow style="height: 50vw; margin-top:20px;">
+      <div class="ion-text-center">
+        <ion-badge color="dark" style="padding:10px;">
+          <ion-icon style="margin-right: 5px;" name="document"></ion-icon>
+          <ion-text style="margin-right: 10px;">{{'survey_txt_04'|translate}}</ion-text>
+          <ion-text style="margin-right: 5px;" color="personalPrimary">{{position+1}}</ion-text>
+          <ion-text style="margin-right: 5px;">/</ion-text>
+          <ion-text style="margin-right: 5px;">{{data.r_questions.length}}</ion-text>
+        </ion-badge>
+      </div>
+
+
+
+      <div margin class="ion-text-center">
+        <ion-text style="font-size: 6vw;font-weight: bold;">{{data.r_questions[position].q_content}}</ion-text>
+      </div>
+      <div class="ion-text-center" style="margin-top: 10px; color: #000;">
+        <ion-text>{{data.r_guide}}</ion-text>
+      </div>
+    </div>
+
+</ion-header>
+
+
+
+
+
+
+<ion-content padding *ngIf="data">
+
+  <ion-list radio-group>
+  <ion-radio-group  *ngFor="let qu of data.r_questions; index as q" [ngStyle]="{'display':q === position?'block':'none'}" [(ngModel)]="qu.selectedGrade">
+      <ion-item margin lines="none" *ngFor="let aw of qu.q_answers; index as a" color="translucent"
+                style="border-radius: 35px; border: 1px solid #4495b6; /*background: #009900;*/ /*text-align:center;*/"
+      [ngStyle]="{'background':qu.selectedGrade == aw.a_grade?'#52C4ED':'#FFFFFF'}">
+        <!--{{aw.a_grade}}-->
+        <ion-radio margin color="personalPrimary" value={{aw.a_grade}} (ionSelect)="selectedNext(qu, aw.a_grade)"></ion-radio>
+        <ion-label margin>{{aw.a_content}}</ion-label>
+      </ion-item>
+  </ion-radio-group>
+  </ion-list>
+
+</ion-content>
+<ion-footer no-border>
+  <ion-toolbar class="ion-text-center" no-shadow>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6">
+            <ion-button expand="block" color="light" (click)="previous()">{{'survey_txt_01'|translate}}</ion-button>
+        </ion-col>
+        <ion-col size="6">
+            <ion-button expand="block"color="personalPrimary" (click)="next()">{{(position + 1 >= data.r_questions.length ? 'survey_txt_03' : 'survey_txt_02')|translate}}</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+  </ion-toolbar>
+</ion-footer>

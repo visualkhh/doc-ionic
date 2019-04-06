@@ -1,0 +1,232 @@
+//@import "~@ionic/angular/dist/themes/ionic.theme.default.md";
+//@import "~@ionic/angular/dist/schematics/addionic.theme.default.ios";
+.welcome-card ion-img {
+  max-height: 35vh;
+  overflow: hidden;
+}
+//:root {
+//  --ion-background-color: opacity(0);
+//}
+.homeContent {
+  //  //background-color: #0ec254;
+  //  color: pink;
+  background: url('/assets/images/bg_main.png');
+  background-color: #cccccc; /* Used if the image is unavailable */
+  //height: 500px; /* You must set a specified height */
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover; /* Resize the background image to cover the entire container */
+}
+//app-home {
+//  //  //background-color: #0ec254;
+//  //  color: pink;
+//  //height: 500px; /* You must set a specified height */
+//  --ion-background-color: pink;
+//  //--background-color: #cccccc;
+//  //--background-position: center;
+//  //--background-repeat: no-repeat;
+//  //--background-size: cover;
+//}
+
+//app-home {
+//  width: 20px
+//}
+
+.scrolling-wrapper {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  .card {
+    //width: auto;
+    display: inline-block;
+  }
+}
+.scrolling-wrapper {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+
+
+.measArc {
+  //  //background-color: #0ec254;
+  //  color: pink;
+  background: url('/assets/images/ic_main_circle.png');
+  //background-color: #cccccc; /* Used if the image is unavailable */
+  //height: 5vm; /* You must set a specified height */
+  height: 40vmin;
+  //height: 40vw;
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: contain; /* Resize the background image to cover the entire container */
+  margin:10px;
+
+}
+.pulseEmpty {
+  //  //background-color: #0ec254;
+  //  color: pink;
+  background: url('/assets/images/ic_main_graph_03.png');
+  height: 40vmin;
+  //height: 40vw;
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: contain; /* Resize the background image to cover the entire container */
+  margin:10px;
+}
+
+.neuroEmpty {
+  //  //background-color: #0ec254;
+  //  color: pink;
+  background: url('/assets/images/ic_main_graph_04.png');
+  height: 40vmin;
+  //height: 40vw;
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: contain; /* Resize the background image to cover the entire container */
+  margin:10px;
+}
+
+
+ion-list {
+  --ion-background-color:transparent;
+}
+ion-item{
+  --ion-background-color:transparent;
+}
+ion-card{
+  margin:3px;
+  //max-width: 35vmin;
+  width: 35vmin;
+  //max-font-size: 20%;
+  background-color: #FFF;
+  display: inline-block;
+  //ion-card-header{
+  //
+  //  --ion-background-color: #FFF;
+  //}
+}
+ion-card-title{
+  font-size: 3vw;
+  text-align: center;
+}
+//.card {
+//  background-color: #000; // black
+//}
+//ion-img {
+//  object-fit: resize;
+//  //height: 100%;
+//  width: auto !important;
+//  border: 0;
+//  padding: 0;
+//  background-color: grey;
+//}
+//
+//ion-toolbar, ion-content {
+//  --background: opacity(0);
+//  //  color: rgb(255,255,255);
+//}
+//ion-list {
+//  background: "#ff0000" !important;
+//}
+//ion-menu-button {
+//  color: rgb(255,255,255);
+//}
+////ion-content {
+////  --background: opacity(0);
+////}
+////ion-content {
+////  --background: url("/assets/images/ic_intro_bg.png");
+////  --background-repeat: no-repeat;
+////  --background-size: cover;
+////}
+////body {
+////  background-image: url("/assets/images/ic_intro_bg.png");
+////  background-color: #cccccc;
+////}
+//ion-card {
+//  --background: opacity(0);
+//}
+//ion-list-header {
+//  --background: opacity(0);
+//}
+//  ion-list {
+//    --background: opacity(0);
+//  }
+//:root {
+//  --ion-background-color: opacity(0);
+//}
+//body {
+//  background-image: url('/assets/images/ic_intro_bg.png');
+//  width: 100%;
+//  background-size: 100% 100%;
+//  background-repeat: no-repeat;
+//  background-position: center center;
+//}
+
+
+//ion-header {
+//  ion-toolbar {
+//    --background: opacity(0)
+//  }
+//}
+//
+//ion-content {
+//    --background: opacity(0)
+//}
+//ion-content {
+//  ion-list {
+//    --background: opacity(0)
+//  }
+//}
+//
+//ion-content {
+//    ion-list {
+//      ion-list-header{
+//        --background: opacity(0)
+//      }
+//    }
+//}
+//:host {
+//  ion-content {
+//    --background: opacity(0)
+//  }
+//}
+//:host {
+//  ion-list{
+//    --background: opacity(0)
+//  }
+//}
+//.ios {
+//  --ion-background-color: #22f;
+//}
+.bgNone{
+  background: rgba(0, 151, 19, 0.1);
+}
+//ion-header, ion-toolbar, ion-content, ion-list, ion-card, ion-card-content, ion-list-header, ion-item, ion-input {
+//  //--background: transparent;
+//  //--ion-color-base: transparent !important;
+//  --ion-toolbar-background-color: transparent;
+//  --ion-toolbar-text-color: white;
+//}
+//ion-toolbar {
+//  --background-color: transparent;
+//  --ion-color-base: transparent !important;
+//}
+//.mypage {
+//  ion-header::after {
+//    background: transparent;
+//    background-image: none !important;
+//  }
+//  .toolbar {
+//    .toolbar-background{
+//      background: transparent;
+//    }
+//  }
+//}
+
+//:hover{
+//  border:1px solid red;
+//}
+*:focus { outline: none; }

@@ -1,0 +1,13 @@
+.serveyHeader {
+  //  //background-color: #0ec254;
+  //  color: pink;
+  background: url('/assets/images/ic_list_bg_10.png');
+  height: 200px;
+  //height: 40vw;
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover; /* Resize the background image to cover the entire container */
+  //margin:10px;
+  position: relative;
+}
+*:focus { outline: none; }

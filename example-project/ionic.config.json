@@ -1,0 +1,8 @@
+{
+  "name": "personal-mindcare-webapp",
+  "integrations": {
+    "capacitor": {},
+    "cordova": {}
+  },
+  "type": "angular"
+}

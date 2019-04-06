@@ -1,0 +1,11 @@
+{
+  "config_ios" : {
+    "NSCameraUsageDescription": "Take pictures",
+    "CFBundleDisplayName": "Personal",
+    "CFBundleName": "Personal"
+  },
+  "config_android" : {
+    "app_name": "Personal"
+  }
+}
+

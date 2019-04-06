@@ -1,0 +1,41 @@
+<ion-header no-border style="background-color: #ffffff;">
+    <ion-toolbar color="translucent" no-shadow color="medium">
+        <ion-buttons slot="start">
+            <!--<ion-back-button color="light" (click)="back();"></ion-back-button>-->
+            <ion-back-button defaultHref="home" color="light" [routerLink]="['/servey-history']"></ion-back-button>
+            <!--<ion-button (click)="back();"> back </ion-button>-->
+        </ion-buttons>
+        <ion-title>{{'CONTENTS_TITLE_21'|translate}}</ion-title>
+    </ion-toolbar>
+
+    <div class="ion-text-center" style="background-color: #dbdbdb; padding:10px;" *ngIf="research">
+        {{research.r_title}}
+    </div>
+</ion-header>
+
+<ion-content padding>
+
+
+    <div *ngIf="result" class="ion-text-center" style="margin-top:20px;">
+        <img src="/assets/images/{{result.result_img}}.png" style="width: 45vw;">
+    </div>
+    <div *ngIf="result" class="ion-text-center" style="font-size: 7vw;">
+        <p class="ion-text-center">
+        <ion-text color="medium">
+            검사 결과
+        </ion-text>
+        <ion-text color="danger">
+            {{result.result_type}}
+        </ion-text>
+        <ion-text color="medium">
+            입니다.
+        </ion-text>
+
+        </p>
+    </div>
+    <div *ngIf="result" style="margin-top: 20px;">
+        <ion-text color="medium" *ngIf="result">
+            {{result.result_comment}}
+        </ion-text>
+    </div>
+</ion-content>
