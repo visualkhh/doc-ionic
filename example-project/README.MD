@@ -121,6 +121,10 @@ https://ithub.tistory.com/160
 코르도바는 이걸로 설치해라 : ionic cordova plugin add https://github.com/katzer/cordova-plugin-background-mode --nofetch
 npm install @ionic-native/background-mode
 
+12.2쪽에서 백그라운드 플러그인 오류날때
+https://github.com/katzer/cordova-plugin-background-mode/issues/419
+src\ios\APPBackgroundMode.m replace following lines
+NSString* str = @"X2Fsd2F5c1J1bnNBdEZvcmVncm91bmRQcmlvcml0eQ=="; 를 =>  NSString* str = @"YWx3YXlzUnVuc0F0Rm9yZWdyb3VuZFByaW9yaXR5"; 바꿔라
 plgins/cordova-plugin-background-mode/APPBackgroundMode.m 파일의
 orKey:@"_requiresUserActionForMediaPlayback"]; -> orKey:@"requiresUserActionForMediaPlayback"];
 언더바 빼줘라.
