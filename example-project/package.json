@@ -26,6 +26,7 @@
     "@capacitor/core": "1.0.0-beta.19",
     "@capacitor/ios": "^1.0.0-beta.19",
     "@ionic-native/app-version": "^5.3.0",
+    "@ionic-native/background-mode": "^5.4.0",
     "@ionic-native/base64": "^5.3.0",
     "@ionic-native/core": "^5.0.0",
     "@ionic-native/device": "^5.2.0",
@@ -38,8 +39,10 @@
     "@ionic-native/file-transfer": "^5.3.0",
     "@ionic-native/globalization": "^5.3.0",
     "@ionic-native/http": "^5.2.0",
+    "@ionic-native/httpd": "^5.3.0",
     "@ionic-native/in-app-browser": "^5.3.0",
-    "@ionic-native/media": "^5.3.0",
+    "@ionic-native/local-notifications": "^5.4.0",
+    "@ionic-native/media": "^5.4.0",
     "@ionic-native/native-audio": "^5.3.0",
     "@ionic-native/splash-screen": "^5.0.0",
     "@ionic-native/status-bar": "^5.0.0",
@@ -48,12 +51,15 @@
     "@ngx-translate/core": "^11.0.1",
     "@ngx-translate/http-loader": "^4.0.0",
     "aes256": "^1.0.4",
-    "angular-graphk": "^1.0.7",
+    "angular-graphk": "^1.0.13",
     "com-badrit-base64": "0.2.0",
     "cordova-android": "7.1.4",
     "cordova-ios": "4.5.5",
     "cordova-plugin-advanced-http": "^2.0.6",
     "cordova-plugin-app-version": "^0.1.9",
+    "cordova-plugin-background-mode": "git+https://github.com/katzer/cordova-plugin-background-mode.git",
+    "cordova-plugin-badge": "0.8.8",
+    "cordova-plugin-calltrap": "0.0.4",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-document-viewer": "^0.9.10",
     "cordova-plugin-file": "^6.0.1",
@@ -62,9 +68,11 @@
     "cordova-plugin-filechooser": "^1.2.0",
     "cordova-plugin-filepath": "^1.5.1",
     "cordova-plugin-globalization": "^1.11.0",
+    "cordova-plugin-httpd": "0.9.3",
     "cordova-plugin-inappbrowser": "3.0.0",
     "cordova-plugin-ionic-keyboard": "^2.1.3",
     "cordova-plugin-ionic-webview": "^3.1.2",
+    "cordova-plugin-local-notification": "0.9.0-beta.2",
     "cordova-plugin-localization-strings": "git+https://github.com/kelvinhokk/cordova-plugin-localization-strings.git",
     "cordova-plugin-media": "^5.0.2",
     "cordova-plugin-nativeaudio": "^3.0.9",
@@ -77,6 +85,7 @@
     "crypto-js": "^3.1.9-1",
     "emulate": "1.0.2",
     "integrator-cordova-plugin-downloader": "^1.1.0",
+    "io.gvox.plugin.phonecalltrap": "~0.1.2",
     "klaw": "^3.0.0",
     "moment": "^2.24.0",
     "rxjs": "~6.3.3",
@@ -139,11 +148,13 @@
         "ANDROID_SUPPORT_V4_VERSION": "27.+"
       },
       "com-badrit-base64": {},
-      "cordova-plugin-inappbrowser": {}
+      "cordova-plugin-inappbrowser": {},
+      "cordova-plugin-httpd": {},
+      "cordova-plugin-local-notification": {},
+      "io.gvox.plugin.phonecalltrap": {},
+      "cordova-plugin-calltrap": {},
+      "cordova-plugin-background-mode": {}
     },
-    "platforms": [
-      "ios",
-      "android"
-    ]
+    "platforms": []
   }
 }

@@ -1,4 +1,62 @@
+project program setting
+=============
+1. node install (https://nodejs.org/ko/)  
+    - ^v8.11.3  이상
+2. npm install (https://www.npmjs.com/get-npm)    
+    - ^5.6.0 이상
+3. typescript install (https://www.npmjs.com/package/typescript)  
+    - ^3.0.1 이상
+4. angular CLI install (https://angular.io/guide/quickstart)  
+    - npm install -g @angular/cli
+5. ionic CLI install (https://ionicframework.com/getting-started#cli)  
+    - npm install -g ionic
+6. corodova install
+    - npm install -g cordova@8.1.2
+    
+project run setting
+=============
+1. npm install (라이브러리 install)  
+    - cd ${PROJECT_PATH}  
+    - npm install  
+    - node_module 디렉토리 생김
+
+2. server run  
+    - ionic serve  
+    - http://localhost:8100/
+
+project platform 추가
+============
+1. cd ${PROJECT_PATH}  
+2. ionic cordova resources
+    - ${PROJECT_PATH}/resources/android, ios 디렉토리 생김
+2. ionic cordova platform
+3. ionic cordova platform add ios
+    - ${PROJECT_PATH}/platforms/ios 디렉토리 생김
+4. ionic cordova platform add android
+    - ${PROJECT_PATH}/platforms/android 디렉토리 생김
+
+project build 및 prepare android, ios
+=============  
+1. ionic build
+    - cd ${PROJECT_PATH}  
+    - ionic build --prod  
+    - ${PROJECT_PATH}/www 디렉토리 생김  
+2. android build
+    - cd ${PROJECT_PATH}  
+    - ionic cordova prepare android
+    - android studio open -> ${PROJECT_PATH}/platforms/android
+3. ios build
+    - cd ${PROJECT_PATH}  
+    - ionic cordova prepare ios  
+    - xcode open -> ${PROJECT_PATH}/platforms/ios
+    - xcode 에서 Signing 변경 OMNIC&S inc.
+    - 파일 체크 : Resources/InfoPlist.strings 확인(다국어처리) 필요
+
+
+
+
 ionic
+---
 ionic start personal-mindcare-webapp
 ionic build  #or ng build
 
@@ -13,6 +71,11 @@ ionic cordova build ios
 resource 바꾼뒤
 ionic cordova resources
 
+
+ionic cordoca platform rm ios
+ionic cordoca platform add ios
+ionic cordoca prepare ios
+ionic cordoca build ios
 
 
 
@@ -36,8 +99,8 @@ ionic cordova plugin add cordova-plugin-file-opener2
 plugin
 ----
 localization
-npm i cordova-plugin-localization-strings
 ionic cordova plugin add https://github.com/kelvinhokk/cordova-plugin-localization-strings.git --fetch
+npm i cordova-plugin-localization-strings
 plugin>cordova-plugin-localization-strings>create_ios_strings.js 파일에 utf16을 utf8로바꾼다. 
 ionic cordova build ios
 ionic cordova platform add ios
@@ -49,6 +112,44 @@ https://ionicframework.com/docs/v3/developer-resources/ng2-translate/
 http://masteringionic.com/blog/2018-07-14-creating-a-multi-language-ionic-translation-app-with-ngx-translate/
 npm install @ngx-translate/core @ngx-translate/http-loader --save
 
+
+background-mode
+---
+https://ionicframework.com/docs/native/background-mode
+https://ithub.tistory.com/160
+
+코르도바는 이걸로 설치해라 : ionic cordova plugin add https://github.com/katzer/cordova-plugin-background-mode --nofetch
+npm install @ionic-native/background-mode
+
+plgins/cordova-plugin-background-mode/APPBackgroundMode.m 파일의
+orKey:@"_requiresUserActionForMediaPlayback"]; -> orKey:@"requiresUserActionForMediaPlayback"];
+언더바 빼줘라.
+
+background-mode android version oreo 8버전버터 채널아이디넣어야지 처리가능한거조치
+---
+plugins/cordova-plugin-background-mode/android/ForegroundService.java 쪽
+notification = new Notification.Builder(context)
+                    .setContentTitle(title)
+                    .setContentText(text)
+                    .setOngoing(true)
+                    .setSmallIcon(getIconResId(settings));
+이부분을 아래와 같이 바꾼다. 
+Notification.Builder notification = null;
+if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+    String name ="mindcare_personal_noti";
+    NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    String id = "my_channel_01";
+    int importance = NotificationManager.IMPORTANCE_LOW;
+    android.app.NotificationChannel mChannel = new android.app.NotificationChannel(id, name, importance);
+    mChannel.enableLights(true);
+    //mChannel.setLightColor(Color.RED);
+    mChannel.enableVibration(false);
+    //mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+    mNotificationManager.createNotificationChannel(mChannel);
+    notification = new Notification.Builder(context).setContentTitle(title).setContentText(text).setOngoing(true).setChannelId(id).setSmallIcon(getIconResId(settings));
+} else {
+    notification = new Notification.Builder(context).setContentTitle(title).setContentText(text).setOngoing(true).setSmallIcon(getIconResId(settings));
+}
 
 
 https://www.youtube.com/watch?v=e-T_8jZTrv0
@@ -88,10 +189,23 @@ ionic file api
 ----
  https://ionicframework.com/docs/v3/native/file/
 
+ionic Development & Testing On-Device with Ionic DevApp and View 내로컬 서버바로보는 디바이스 아이오닉 ionic Dev 앱다운로드.필요
+---
+ionic serve -c
+https://www.youtube.com/watch?v=7jTQYF5qE98
 
 ionic icon
 ----
 https://ionicframework.com/docs/v3/ionicons/
+
+livereload
+ionic cordova run ios -c -l
+https://www.youtube.com/watch?v=9_F9vscfMgk
+
+ionic native audio background mode
+---
+https://www.techiediaries.com/ionic-background-mode/
+
 
 --------------------------------
 
@@ -188,6 +302,11 @@ vitual font size
 https://ccuram.tistory.com/28
 scroll
 https://codeburst.io/how-to-create-horizontal-scrolling-containers-d8069651e9c6
+
+ionic http native
+---
+https://www.youtube.com/watch?v=ApSskiMT2_8&t=235s
+https://ionicframework.com/docs/native/httpd
 
 ionic color
 ---

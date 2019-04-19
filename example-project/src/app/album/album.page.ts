@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Storage} from '@ionic/storage';
 import {UserService} from '../core/services/user.service';
 import {ApiService} from '../core/services/api.service';
@@ -18,6 +18,7 @@ import {forkJoin} from 'rxjs';
 import {from} from 'rxjs';
 import {fromPromise} from 'rxjs/internal/observable/fromPromise';
 // import {fromArray} from 'rxjs/internal/observable/fromArray';
+import {Media, MediaObject} from '@ionic-native/media/ngx';
 import {fromArray} from 'rxjs-compat/observable/fromArray';
 import {NativeAudio} from '@ionic-native/native-audio/ngx';
 import {Downloader, DownloadRequest, NotificationVisibility} from '@ionic-native/downloader/ngx';
@@ -33,13 +34,23 @@ import {Album} from '../../assets/contents/Album';
 import {AlbumInfo} from '../core/domain/album/AlbumInfo';
 import {AlbumContent} from '../core/domain/album/AlbumContent';
 import {AlertController, Platform, LoadingController} from '@ionic/angular';
+import {BackgroundMode} from '@ionic-native/background-mode/ngx';
+import {LocalNotifications} from '@ionic-native/local-notifications/ngx';
+
 // import {File} from '@ionic-native/file/ngx';
 @Component({
     selector: 'app-album',
     templateUrl: './album.page.html',
     styleUrls: ['./album.page.scss'],
 })
-export class AlbumPage implements OnInit {
+export class AlbumPage implements OnInit, OnDestroy {
+    public album: AlbumInfo;
+    public playerTitle: string;
+    @ViewChild('player') public player: ElementRef;
+    public loadingDialog: any;
+    public alertPopupStr: any = null;
+    public lastPlayState: boolean;
+
     constructor(private translateService: TranslateService,
                 private storage: Storage,
                 private userService: UserService,
@@ -57,14 +68,79 @@ export class AlbumPage implements OnInit {
                 private documentViewer: DocumentViewer,
                 private base64: Base64,
                 private transfer: FileTransfer, private file: File,
+                private localNotifications: LocalNotifications,
+                private backgroundMode: BackgroundMode,
                 private api: ApiService) {
+
+        console.log('Album constructor' + route);
+        // this.platform.pause.subscribe(() => {
+        //     if (this.router.url.startsWith('/album')) {
+        //         console.log('Album paused'); // do what you want to do here when the app is about to go in background
+        //         this.lastPlayState = this.isPlaying();
+        //         this.player.nativeElement.pause();
+        //     }
+        // });
+        // this.platform.resume.subscribe(() => {
+        //     if (this.router.url.startsWith('/album')) {
+        //         console.log('Album resumed ' + this.lastPlayState );  // do what you want to do here when the app resumes or comes in foreground
+        //         if (this.lastPlayState === true) {
+        //             this.player.nativeElement.play();
+        //         }
+        //         this.lastPlayState = this.isPlaying();
+        //     }
+        // });
+        this.platform.backButton.subscribeWithPriority(9999, () => {
+            console.log('back!! album Page  ', this.router.url);
+            if (this.router.url.startsWith('/album')) {
+                if (this.loadingDialog && this.loadingDialog.isConnected === true) {
+                    this.loadingDialog.dismiss();
+                    return;
+                }
+                if (this.alertPopupStr != null && this.alertPopupStr.isConnected === true) {
+                    this.alertPopupStr.dismiss();
+                    return;
+                }
+                this.lastPlayState = this.isPlaying();
+                if (this.lastPlayState === true) {
+                    this.player.nativeElement.pause();
+                }
+                this.backgroundMode.disable();
+                this.router.navigate(['/home']);
+
+            }
+        });
     }
 
-    public album: AlbumInfo;
-    public playerTitle: string;
-    @ViewChild('player') public player: ElementRef;
+    isPlaying(): boolean {
+        if (this.player && this.player.nativeElement && this.player.nativeElement.currentTime > 0 && !this.player.nativeElement.paused && !this.player.nativeElement.ended && this.player.nativeElement.readyState > 2) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // dismissPopup() {
+    //     console.log('back!! dismissPopup  ' );
+    //     if (this.loadingDialog) {
+    //         this.loadingDialog.dismiss();
+    //     }
+    //     if (this.alertController) {
+    //         this.alertController.dismiss();
+    //     }
+    // }
+    ngOnDestroy() {
+        console.log('Album ngOnDestroy');
+        this.backgroundMode.disable();
+        // if (this.alertController) {
+        //     this.alertController.dismiss();
+        // }
+        // console.log('HomePage ngOnDestroy');
+        // this.platform.pause.subscribe();
+        // this.platform.resume.subscribe();
+    }
 
     ngOnInit() {
+        console.log('Album ngOnInit : ');
         const title = this.route.snapshot.paramMap.get('title');
         fromArray(this.contensService.albumInfos).filter((it: AlbumInfo) => {
             return it.c_title === title;
@@ -77,7 +153,7 @@ export class AlbumPage implements OnInit {
                 // }).catch(sit => {
                 //     it.contents[i].exists = false;
                 // });
-                this.file.resolveDirectoryUrl(directory).then( drit => {
+                this.file.resolveDirectoryUrl(directory).then(drit => {
                     this.file.getFile(drit, it.contents[i].c_title, {create: false, exclusive: false}).then(sit => {
                         it.contents[i].file = sit;
                     }).catch(sit => {
@@ -89,6 +165,35 @@ export class AlbumPage implements OnInit {
         }).subscribe(it => {
             this.album = it;
         });
+
+        // console.log('------wwwwwww');
+        if (window['CallTrap'] && window['CallTrap']['onCall']) {
+            window['CallTrap']['onCall'](({state, number}) => {
+                console.log(`album CHANGE STATE: ${state}`);
+                switch (state) {
+                    case window['CallTrap'].STATE.RINGING:
+                        console.log('album Phone is ringing', number);
+                        this.lastPlayState = this.isPlaying();
+                        this.player.nativeElement.pause();
+                        break;
+                    case window['CallTrap'].STATE.OFFHOOK:
+                        console.log('album Phone is off-hook');
+                        break;
+                    case window['CallTrap'].STATE.IDLE:
+                        console.log('album Phone is idle  :  ' + this.lastPlayState);
+                        if (this.lastPlayState === true) {
+                            setTimeout(() => {
+                                this.playMusic();
+                            }, 2000);
+                            return;
+                        }
+                        this.lastPlayState = this.isPlaying();
+                        break;
+                }
+            });
+        }
+        // this.player.nativeElement.setAttribute('title','zz');
+        // alert(this.player.nativeElement.getAttribute('title'));
         // Observable.of(fromArray(this.contensService.albums)).filter((it: Album) => {
         //     console.log('-----------asd-');
         //     return it.c_title === title;
@@ -100,6 +205,12 @@ export class AlbumPage implements OnInit {
         // this.route.paramMap.subscribe(params => {
         //     console.log(params.get('title'));
         // });
+    }
+
+    async playMusic() {
+        console.log('Album timeout play');
+        this.player.nativeElement.play();
+        this.lastPlayState = this.isPlaying();
     }
 
 //
@@ -256,10 +367,44 @@ export class AlbumPage implements OnInit {
 //
 //
     async downloadAndPlay(content: AlbumContent) {
+        // const loading = await this.alertService.loading('HISTORY_LIST_FOOTER_TEXT');
         const fileTransfer: FileTransferObject = this.transfer.create();
         const url = content.c_url;
+        const appName = await this.translateService.get('app_name').toPromise();
+        const contentTitle = await this.translateService.get(content.c_id + '_c_title').toPromise();
         const directory = this.getDirectory();
+
+
+        // if (cordova.plugins['backgroundMode']) {
+        //     cordova.plugins['backgroundMode'].setDefaults({
+        //         title: await this.translateService.get('app_name').toPromise(),
+        //         text: await this.translateService.get(content.c_id + '_c_title').toPromise(),
+        //         // icon?: string;
+        //         // color?: string;
+        //         // resume?: boolean;
+        //         // hidden?: boolean;
+        //         // bigText?: boolean;
+        //         // ticker?: string;
+        //         silent: false
+        //     });
+        //     cordova.plugins['backgroundMode'].enable();
+        //     cordova.plugins['backgroundMode'].on('activate', (...args: any[]) => {
+        //         console.log('activite sound background ', args);
+        //     });
+        // }
+
+        let audioTypeStr = null;
+
+        if (content.file) {
+            this.loadingDialog = await this.alertService.loading('HISTORY_LIST_FOOTER_TEXT');
+            audioTypeStr = 'playing';
+        } else if (directory) {
+            this.loadingDialog = await this.alertService.loading('DOWNLOADING');
+            audioTypeStr = 'downLoadPlaying';
+        }
+        const loading = this.loadingDialog;
         const filePromise = new Promise((resolve, reject) => {
+            console.log('promise ', content.file, directory);
             if (content.file) {
                 resolve(content.file);
             } else if (directory) {
@@ -271,12 +416,10 @@ export class AlbumPage implements OnInit {
                     // this.progress = perc;
                 });
             } else {
-                reject();
-                this.alertService.alert('not support');
+                reject({message: 'not support'});
             }
         });
 
-        const loading = await this.presentLoading();
         filePromise.then((entry: FileEntry) => {
             // this.alertService.alert('download complete: ' + entry.toURL());
             // console.log('download complete: ' + entry.toURL());
@@ -288,33 +431,82 @@ export class AlbumPage implements OnInit {
 
             // const getURL = entry.toURL();
             this.playerTitle = content.c_id;
+            console.log('filePromise then ', this.playerTitle);
             entry.file(sit => {
                 const reader = new FileReader();
                 reader.onloadstart = (ev: ProgressEvent) => {
                     // console.log('1--' + reader.result + '  ' + ev);
                 };
                 reader.onloadend = (ev: ProgressEvent) => {
+                    console.log('audio onloadend ', ev);
                     // console.log('2--' + reader.result + '  ' + ev);
                     // const audio = new Audio(reader.result as string);
                     // audio.play();
+
+                    // if (this.platform.is('android')) {
+                    //     this.player.nativeElement.onplay = () => {
+                    //         this.localNotifications.setDefaults({
+                    //             vibrate: false,
+                    //             foreground: true
+                    //         });
+                    //
+                    //         this.localNotifications.schedule({
+                    //             id: 1,
+                    //             title: appName,
+                    //             text: contentTitle,
+                    //             data: { content: content },
+                    //             sound: null,
+                    //             foreground: true,
+                    //             vibrate: false
+                    //         });
+                    //     };
+                    // }
+                    this.backgroundMode.setDefaults({
+                        title: appName,
+                        text: contentTitle
+                        // icon?: string;
+                        // color?: string;
+                        // resume?: boolean;
+                        // hidden?: boolean;
+                        // bigText?: boolean;
+                        // ticker?: string;
+                        // silent?: boolean;
+                    });
+                    this.backgroundMode.enable();
+                    this.backgroundMode.on('activate', (...args: any[]) => {
+                        console.log('activite sound background ', args);
+                    }).subscribe(itback => {
+                        console.log('activite sound background  itback', itback);
+                    });
                     // https://www.w3schools.com/tags/av_event_canplaythrough.asp
                     this.player.nativeElement.pause();
                     this.player.nativeElement.src = reader.result as string;
                     this.player.nativeElement.play();
                     this.player.nativeElement.oncanplaythrough = () => {
                         loading.dismiss();
+                        if (audioTypeStr === 'downLoadPlaying') {
+                            this.player.nativeElement.pause();
+                        }
                     };
                 };
                 // The most important point, use the readAsDatURL Method from the file plugin
                 reader.readAsDataURL(sit);
             }, err => {
-                loading.dismiss();
+                if (loading && loading.isConnected === true) {
+                    loading.dismiss();
+                }
                 this.alertService.alert('NO_FILES');
             });
 
         }).catch(it => {
-            loading.dismiss();
-            this.alertService.alert('NO_FILES');
+            if (loading && loading.isConnected === true) {
+                loading.dismiss();
+            }
+            if (it && it.message) {
+                this.alertService.alert(it.message);
+            } else {
+                this.alertService.alert('NO_FILES');
+            }
         });
     }
 
@@ -337,7 +529,7 @@ export class AlbumPage implements OnInit {
         const fileTransfer: FileTransferObject = this.transfer.create();
         const url = content.c_url;
         const directory = this.getDirectory();
-        const loading = await this.presentLoading();
+        const loading = await this.alertService.loading('HISTORY_LIST_FOOTER_TEXT');
         fileTransfer.download(url, directory + content.c_title).then((entry: FileEntry) => {
             console.log('download complete: ' + entry.toURL());
             this.alertService.alert('download complete: ' + entry.toURL());
@@ -400,7 +592,10 @@ export class AlbumPage implements OnInit {
 
 
     playgo(title: string, path: string) {
-
+        // https://stackoverflow.com/questions/44885809/how-to-read-audio-file-using-cordova-file-system
+        // play
+        // FileReader
+        // this.nativeAudio.preloadComplex()
         this.nativeAudio.preloadComplex(title, path, 1, 1, 0).then(it => {
             console.log('s ' + it);
         }, onError => {
@@ -427,18 +622,43 @@ export class AlbumPage implements OnInit {
         });
     }
 
-    async presentLoading() {
-        const loading = await this.loadingController.create({
-            message: await this.translateService.get('DOWNLOADING').toPromise(),
-            // duration: 10000
-        });
-        await loading.present();
+    playBack() {
+        // https://stackoverflow.com/questions/44885809/how-to-read-audio-file-using-cordova-file-system
+        // play
+        // FileReader
+        // this.nativeAudio.preloadComplex()
+        // const title = 'titi';
+        // this.nativeAudio.preloadComplex(title, 'assets/fafa.mp3', 1, 1, 0).then(it => {
+        // this.nativeAudio.preloadSimple(title, 'assets/fafa.mp3').then(it => {
+        //     console.log('s ' + it);
+        // }, onError => {
+        //
+        //     console.log('b ' + onError);
+        // });
+        // this.nativeAudio.preloadComplex('uniqueId2', 'path/to/file2.mp3', 1, 1, 0).then(onSuccess, onError);
 
-        // loading.onclose
-        // const { role, data } = await loading.onDidDismiss();
-        // console.log('Loading dismissed!');
-        return loading;
+
+        // this.backgroundMode.enable();
+        // this.backgroundMode.on('activate', () => {}).subscribe(itback => {
+        //     this.nativeAudio.play(title).then(onSuccess => {
+        //         console.log('c ' + onSuccess);
+        //     }, onError => {
+        //         console.log('d ' + onError);
+        //     });
+        //     timer(15000).subscribe(() => {
+        //
+        //         this.nativeAudio.stop(title).then(onSuccess => {
+        //             console.log('e ' + onSuccess);
+        //         }, onError => {
+        //             console.log('f ' + onError);
+        //         });
+        //     });
+        // });
+
+        // this.nativeAudio.play(title, () => console.log('audio1 is done playing'));
+
     }
+
 
     async downloadConfirm(content: AlbumContent) {
         const alert = await this.alertController.create({
@@ -449,7 +669,7 @@ export class AlbumPage implements OnInit {
                     text: await this.translateService.get('BTN_CANCEL').toPromise(),
                     role: 'cancel',
                     handler: (blah) => {
-                       // console.log('Confirm Cancel: blah');
+                        console.log('Confirm Cancel: blah');
                     }
                 }, {
                     text: await this.translateService.get('BTN_OK').toPromise(),
@@ -461,7 +681,7 @@ export class AlbumPage implements OnInit {
                 }
             ]
         });
-
+        this.alertPopupStr = alert;
         await alert.present();
     }
 

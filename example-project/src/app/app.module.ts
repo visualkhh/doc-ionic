@@ -27,6 +27,10 @@ import {FileTransfer, FileTransferObject} from '@ionic-native/file-transfer/ngx'
 import {Base64} from '@ionic-native/base64/ngx';
 import {File} from '@ionic-native/file/ngx';
 import {InAppBrowser} from '@ionic-native/in-app-browser/ngx';
+import {HTTP} from '@ionic-native/http/ngx';
+import {HTTPResponse} from '@ionic-native/http/ngx';
+import {LocalNotifications} from '@ionic-native/local-notifications/ngx';
+import {BackgroundMode} from '@ionic-native/background-mode/ngx';
 
 export function createTranslateLoader(http: HttpClient) {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -62,7 +66,7 @@ export function createTranslateLoader(http: HttpClient) {
         NativeAudio,
         FileTransfer,
         FileTransferObject,
-        File, DocumentViewer, FilePath, FileChooser, FileOpener, Base64, InAppBrowser,
+        File, DocumentViewer, FilePath, FileChooser, FileOpener, Base64, InAppBrowser, HTTP, LocalNotifications, BackgroundMode,
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}, AppVersion
     ],
     bootstrap: [AppComponent]
