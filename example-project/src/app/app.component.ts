@@ -1,6 +1,14 @@
-import {AfterViewInit, Component, OnChanges, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, NgZone, OnChanges, OnInit, QueryList, Renderer2, ViewChild, ViewChildren} from '@angular/core';
 
-import {AlertController, IonSlides, Platform} from '@ionic/angular';
+import {
+    ActionSheetController,
+    AlertController,
+    IonRouterOutlet,
+    IonSlides,
+    MenuController, ModalController,
+    Platform,
+    PopoverController, ToastController
+} from '@ionic/angular';
 import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
 // import {Observable} from 'rxjs/Rx';
@@ -17,7 +25,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {Storage} from '@ionic/storage';
 import {UserService} from './core/services/user.service';
 import {timer} from 'rxjs';
-import {Router} from '@angular/router';
+import {NavigationEnd, Router} from '@angular/router';
 import {trigger, state, style, animate, transition, query} from '@angular/animations';
 import {LangChangeEvent} from '@ngx-translate/core/lib/translate.service';
 import {ApiService} from './core/services/api.service';
@@ -42,16 +50,16 @@ import {UserDetail} from './core/domain/UserDetail';
 export class AppComponent implements OnInit, OnChanges, AfterViewInit {
     public appPages = [
         {
-            title: 'Home',
-            url: '/home'
+            title: 'home',
+            url: ['/home']
         },
         {
             title: 'SETTING_TEXT_01',
-            url: '/clause'
+            url: ['/clause']
         },
         {
             title: 'SETTING_TEXT_02',
-            url: '/personal'
+            url: ['/personal']
         },
         {
             title: 'SETTING_TEXT_03',
@@ -59,7 +67,7 @@ export class AppComponent implements OnInit, OnChanges, AfterViewInit {
         },
         {
             title: 'CONTENTS_TITLE_13',
-            action: 'guide'
+            url: ['/guide', 'none']
         },
         // {
         //     title: 'List',
@@ -67,19 +75,17 @@ export class AppComponent implements OnInit, OnChanges, AfterViewInit {
         // }
     ];
 
-    showSplash = false;
-    intro = false;
+    showSplash = true;
     introState = 'hide';
-    introLast = false;
+    introType = '';
     lang: string = undefined;
 
     userDetail: UserDetail;
-    slideOpts = {
-        effect: 'flip'
-    };
-    @ViewChild(IonSlides) slides: IonSlides;
-
+    @ViewChildren(IonRouterOutlet) routerOutlets: QueryList<IonRouterOutlet>;
+    @ViewChild(IonRouterOutlet) routerOutlet: IonRouterOutlet;
     // @ViewChild('introSlides') slider2: ElementRef;
+    lastTimeBackPress = 0;
+    timePeriodToExit = 2000;
 
     constructor(
         private platform: Platform,
@@ -93,8 +99,15 @@ export class AppComponent implements OnInit, OnChanges, AfterViewInit {
         private alertService: AlertService,
         private alertController: AlertController,
         private appVersion: AppVersion,
-        private renderer: Renderer2
+        private renderer: Renderer2,
+        private actionSheetCtrl: ActionSheetController,
+        private popoverCtrl: PopoverController,
+        public toastController: ToastController,
+        public modalCtrl: ModalController,
+        private menu: MenuController,
+        private ngZone: NgZone,
     ) {
+        console.log('app constructor');
         this.initializeApp();
     }
 
@@ -103,6 +116,15 @@ export class AppComponent implements OnInit, OnChanges, AfterViewInit {
         // console.log(this.translateService.getLangs());
 
         this.platform.ready().then(() => {
+
+            this.platform.pause.subscribe(() => {
+                // console.log('App paused'); // do what you want to do here when the app is about to go in background
+            });
+
+            this.platform.resume.subscribe(() => {
+                // console.log('App resumed');  // do what you want to do here when the app resumes or comes in foreground
+            });
+
             this.translateService.setDefaultLang('en');
             if (this.translateService.getBrowserLang() !== undefined) {
                 this.translateService.use(this.translateService.getBrowserLang());
@@ -113,20 +135,29 @@ export class AppComponent implements OnInit, OnChanges, AfterViewInit {
             this.splashScreen.hide();
 
 
-            this.introShow();
+
             this.userService.onUserDetailChange().subscribe(it => {
                 this.userDetail = it;
                 // if (!it.login) {
                 //     this.introShow();
                 // }
             });
+
+
+            // let status bar overlay webview
+            this.statusBar.overlaysWebView(false);
+            // set status bar to white
+            // this.statusBar.
+            this.statusBar.styleLightContent();
+            this.statusBar.backgroundColorByHexString('#000');
+            // this.statusBar.styleBlackOpaque();
             // https://poiemaweb.com/angular-rxjs
             // from(this.userService.getUserDetail()).filter( it => null == it).subscribe(it => {
             //     this.intro = true;
             // });
             // this.intro = false;
             // from(this.userService.getUserDetail()).filter( it => null == it);
-            // timer(1500).subscribe(() => { this.showSplash = false; });
+            timer(1500).subscribe(() => { this.showSplash = false; });
             // timer(3000).subscribe(() => { this.introState = 'show'; });
             // this.userService.getUserDetail().then(it => {
             //    if (it) {
@@ -138,8 +169,18 @@ export class AppComponent implements OnInit, OnChanges, AfterViewInit {
             //    }
             // });
         });
+        this.router.events.subscribe(event => {
+            // console.log('home route event', event);
 
-
+            // console.log(this.routerOutlets);
+            if (event instanceof NavigationEnd && (event.url === '/home')) {
+                // this.scrollLeft(0);
+                this.setBackbuttonEvent();
+            }
+        });
+        this.setBackbuttonEvent();
+       // this.backButtonEvent();
+       // this.backButtonEvent2();
         // back
         // this.platform.backButton.subscribe(() => {
         //     // this.platform.
@@ -188,7 +229,7 @@ export class AppComponent implements OnInit, OnChanges, AfterViewInit {
                     text: await this.translateService.get('BTN_OK').toPromise(),
                     handler: () => {
                         this.userService.logOut();
-                        this.alertService.alert('TOAST_TEXT_02');
+                        // this.alertService.alert('TOAST_TEXT_02');
                         this.router.navigate(['/home']);
                     }
                 }
@@ -198,6 +239,7 @@ export class AppComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     ngOnInit() {
+        // console.log('AppComponent ogOnInit', this.routerOutlet);
         // this.translateService.get('lang').subscribe(it => {
         //     console.log(this.lang);
         // });
@@ -218,58 +260,133 @@ export class AppComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
+        // console.log('app ngAfterViewInit');
         // this.showSplash = false;
     }
 
     ngOnChanges() {
+        // console.log('app ngOnChanges');
         // this.visibility = this.isVisible ? 'shown' : 'hidden';
         // console.log("0------------------")
     }
 
-    slideChanged() {
-        // console.log(this.slider2.nativeElement)
-        // console.log((this.slides as ElementRef).nativeElement)
-        this.slides.ionSlideTouchEnd.subscribe(it => {
-            // console.log('ionSlideTouchEnd' + it);
-        });
-        this.slides.isEnd().then(it => {
-            console.log(it);
-            this.introLast = it;
-        });
-        // this.slides.getActiveIndex
-        // this.slides.ionSlideReachEnd
-        // let currentIndex = this.slides.getActiveIndex();
-        // console.log('Current index is', currentIndex);
-        // // this.slides
-        // IonSlides.is
-    }
-
-    introClose() {
-        this.intro = false;
-        this.introLast = false;
-        this.introState = 'hide';
-    }
-
-    introShow() {
-        this.intro = true;
-        this.introLast = false;
-        this.introState = 'show';
-        // this.showSplash = false;
-    }
-
     async action(action: string) {
+       // console.log('action : ' + action +"    /  " + (action === 'version') + "   //  " + JSON.stringify(this.appVersion.getAppName()))
         switch (action) {
             case 'version':
-                const appName = await this.appVersion.getAppName().catch(_ => '-');
-                const packageName = await this.appVersion.getPackageName().catch(_ => '-');
+                // const appName = await this.appVersion.getAppName().catch(_ => '-');
+                // const packageName = await this.appVersion.getPackageName().catch(_ => '-');
                 const versionCode = await this.appVersion.getVersionCode().catch(_ => '-');
                 const versionNumver = await this.appVersion.getVersionNumber().catch(_ => '-');
-                const msg = `<ul style="text-align: left"><li>appName: ${appName}</li><li>packageName: ${packageName}</li><li>versionCode: ${versionCode}</li><li>versionNumver: ${versionNumver}</li></ul><p>Copyright: 2019 OmniC&S Inc.</p>`;
+                const msg = `<div style="text-align: left; padding-left: 1.5em "><p>versionCode: ${versionCode}</p><p>versionNumver: ${versionNumver}</p></div><p>Copyright: 2019 OmniC&S Inc.</p>`;
                 this.alertService.alert(msg, 'MENU_APP_VER');
-                break;
-            case 'guide':
-                this.introShow();
                 break;
         }
     }
+
+    setBackbuttonEvent() {
+       // this.platform.backButton.subscribeWithPriority(0, () => {
+       this.platform.backButton.subscribeWithPriority(9999, () => {
+           // console.log('app backButtonEvent', this.routerOutlet)
+           // if (this.intro) {
+           //     Observable.create(observer => {
+           //         this.ngZone.run(() => {
+           //             this.introClose();
+           //         });
+           //     }).subscribe(i2t => {
+           //     });
+           // } else if (this.routerOutlet && this.routerOutlet.canGoBack()) {
+           //     this.routerOutlet.pop();
+           // }
+
+           if (this.router.url === '/home') {
+               if (new Date().getTime() - this.lastTimeBackPress < this.timePeriodToExit) {
+                   // this.platform.exitApp(); // Exit from app
+                   navigator['app'].exitApp(); // work in ionic 4
+
+               } else {
+                   this.alertService.toast('APP_BACK', 'bottom');
+                   this.lastTimeBackPress = new Date().getTime();
+               }
+           }
+           // } else if (this.router.url.startsWith('/album')) {
+           //     if (this.alertController) {
+           //         this.alertController.dismiss();
+           //     }
+           //     this.router.navigate(['/home']);
+           // // } else if (this.router.url.startsWith('/servey-result')) {
+           // //     this.router.navigate(['/home']);
+           // } else {
+           //     // this.generic.showAlert("Exit", "Do you want to exit the app?", this.onYesHandler, this.onNoHandler, "backPress");
+           // }
+           if (this.routerOutlet && this.routerOutlet.canGoBack()) {
+               this.routerOutlet.pop();
+           }
+       });
+   }
+   // backButtonEvent2() {
+   //      this.platform.backButton.subscribe(async () => {
+   //          // console.log('back!! appcomponent', this.router.url);
+   //          // close action sheet
+   //          try {
+   //              const element = await this.actionSheetCtrl.getTop();
+   //              if (element) {
+   //                  element.dismiss();
+   //                  return;
+   //              }
+   //          } catch (error) {
+   //          }
+   //
+   //          // close popover
+   //          try {
+   //              const element = await this.popoverCtrl.getTop();
+   //              if (element) {
+   //                  element.dismiss();
+   //                  return;
+   //              }
+   //          } catch (error) {
+   //          }
+   //
+   //          // close modal
+   //          try {
+   //              const element = await this.modalCtrl.getTop();
+   //              if (element) {
+   //                  element.dismiss();
+   //                  return;
+   //              }
+   //          } catch (error) {
+   //              console.log(error);
+   //
+   //          }
+   //
+   //          // close side menua
+   //          try {
+   //              const element = await this.menu.getOpen();
+   //              if (element) {
+   //                  this.menu.close();
+   //                  return;
+   //
+   //              }
+   //
+   //          } catch (error) {
+   //
+   //          }
+   //
+   //          this.routerOutlets.forEach((outlet: IonRouterOutlet) => {
+   //              if (outlet && outlet.canGoBack()) {
+   //                  outlet.pop();
+   //
+   //              } else if (this.router.url === '/home') {
+   //                  if (new Date().getTime() - this.lastTimeBackPress < this.timePeriodToExit) {
+   //                      // this.platform.exitApp(); // Exit from app
+   //                      navigator['app'].exitApp(); // work in ionic 4
+   //
+   //                  } else {
+   //                      this.alertService.toast('APP_BACK');
+   //                      this.lastTimeBackPress = new Date().getTime();
+   //                  }
+   //              }
+   //          });
+   //      });
+   //  }
 }
